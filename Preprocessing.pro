@@ -1,5 +1,4 @@
 QT       += gui
-
 Debug:TARGET = Preprocessingd
 Release:TARGET = Preprocessing
 TEMPLATE = lib
