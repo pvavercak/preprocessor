@@ -53,3 +53,5 @@ DEPENDPATH += $$PWD/../../../../../opt/cuda/include
 unix:!macx: LIBS += -L$$PWD/../../../../../usr/lib64/ -lafcuda
 INCLUDEPATH += $$PWD/../../../../../usr/include
 DEPENDPATH += $$PWD/../../../../../usr/include
+
+#
