@@ -51,4 +51,6 @@ INCLUDEPATH += $$PWD/../../../../../opt/cuda/include
 DEPENDPATH += $$PWD/../../../../../opt/cuda/include
 
 #ArrayFire
-unix:!macx: LIBS += -L$$PWD/../../../../../usr/lib/ -lafcuda
+unix:!macx: LIBS += -L$$PWD/../../../../../usr/lib64/ -lafcuda
+INCLUDEPATH += $$PWD/../../../../../usr/include
+DEPENDPATH += $$PWD/../../../../../usr/include
