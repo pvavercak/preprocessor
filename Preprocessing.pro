@@ -45,11 +45,11 @@ unix {
 }
 
 #CUDA
-unix:!macx: LIBS += -L$$PWD/../../../../../opt/cuda/lib64/ -lcudart
-INCLUDEPATH += $$PWD/../../../../../opt/cuda/include
-DEPENDPATH += $$PWD/../../../../../opt/cuda/include
+unix:!macx: LIBS += -L/opt/cuda/lib64/ -lcudart
+INCLUDEPATH += /opt/cuda/include
+DEPENDPATH += /opt/cuda/include
 
 #ArrayFire
-unix:!macx: LIBS += -L$$PWD/../../../../../usr/lib64/ -lafcuda
-INCLUDEPATH += $$PWD/../../../../../usr/include
-DEPENDPATH += $$PWD/../../../../../usr/include
+unix:!macx: LIBS += -L/usr/lib64/ -lafcuda
+INCLUDEPATH += /usr/include
+DEPENDPATH += /usr/include
