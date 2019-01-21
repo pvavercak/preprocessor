@@ -53,3 +53,6 @@ DEPENDPATH += /opt/cuda/include
 unix:!macx: LIBS += -L/usr/lib64/ -lafcuda
 INCLUDEPATH += /usr/include
 DEPENDPATH += /usr/include
+
+#OpenCV
+INCLUDEPATH += /usr/include/opencv4
