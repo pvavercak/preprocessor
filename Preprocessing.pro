@@ -3,10 +3,12 @@ Debug:TARGET = Preprocessingd
 Release:TARGET = Preprocessing
 TEMPLATE = lib
 
-DEFINES += PREPROCESSING_LIBRARY
+DEFINES += PREPROCESSING_LIBRARY CPU_ONLY
+DEFINES -= NO_CPU
 DEFINES += QT_DEPRECATED_WARNINGS
 DEFINES += PRO_PWD=\\\"$$_PRO_FILE_PWD_\\\"
-
+unix: PKGCONFIG += opencv
+CONFIG += afcpu link_pkgconfig
 QMAKE_CFLAGS_ISYSTEM=
 
 SOURCES += preprocessing.cpp \
@@ -44,15 +46,14 @@ unix {
     INSTALLS += target
 }
 
-#CUDA
-unix:!macx: LIBS += -L/opt/cuda/lib64/ -lcudart
-INCLUDEPATH += /opt/cuda/include
-DEPENDPATH += /opt/cuda/include
+QMAKE_CFLAGS += lrt
+unix:!macx: LIBS += -L/usr/local/lib -lafcpu \
+                    -L/usr/lib/ -lprotobuf
 
-#ArrayFire
-unix:!macx: LIBS += -L/usr/lib64/ -lafcuda
+unix:!macx: LIBS += -L/usr/lib/ -lboost_system\
+                    -L/usr/lib/ -lpthread
 INCLUDEPATH += /usr/include
 DEPENDPATH += /usr/include
 
-#OpenCV
-INCLUDEPATH += /usr/include/opencv4
+INCLUDEPATH += /usr/local/include
+DEPENDPATH += /usr/local/include
