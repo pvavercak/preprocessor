@@ -3,7 +3,7 @@
 Preprocessing::Preprocessing()
 {  
     this->preprocessingIsRunning = false;
-
+    this->requester = -1;
     // INPUT PARAMS
     this->inputParams.mode = image;
     this->inputParams.cnt = 0;
@@ -229,7 +229,7 @@ void Preprocessing::cleanDurations()
 
 // INPUT
 
-int Preprocessing::loadInput(cv::Mat imgOriginal)
+int Preprocessing::loadInput(cv::Mat imgOriginal, const qintptr& requester)
 {
     if (this->preprocessingIsRunning) {
         this->preprocessingError(10);
@@ -237,6 +237,7 @@ int Preprocessing::loadInput(cv::Mat imgOriginal)
     }
 
     this->cleanInput();
+    this->requester = requester;
     this->inputParams.imgOriginal = imgOriginal.clone();
     if (this->inputParams.imgOriginal.channels() != 1) cv::cvtColor(this->inputParams.imgOriginal, this->inputParams.imgOriginal, cv::COLOR_BGR2GRAY);
     this->inputParams.inputLoaded = true;
@@ -245,7 +246,7 @@ int Preprocessing::loadInput(cv::Mat imgOriginal)
     return 1;
 }
 
-int Preprocessing::loadInput(QVector<cv::Mat> imgOriginals)
+int Preprocessing::loadInput(QVector<cv::Mat> imgOriginals, const qintptr& requester)
 {
     if (this->preprocessingIsRunning) {
         this->preprocessingError(10);
@@ -253,6 +254,7 @@ int Preprocessing::loadInput(QVector<cv::Mat> imgOriginals)
     }
 
     this->cleanInput();
+    this->requester = requester;
     this->inputParams.imgOriginals = imgOriginals;
     for (int i = 0; i < imgOriginals.size(); i++) {
         if (this->inputParams.imgOriginals[i].channels() != 1) cv::cvtColor(this->inputParams.imgOriginals[i], this->inputParams.imgOriginals[i], cv::COLOR_BGR2GRAY);
@@ -264,7 +266,7 @@ int Preprocessing::loadInput(QVector<cv::Mat> imgOriginals)
     return 1;
 }
 
-int Preprocessing::loadInput(QString inputPath)
+int Preprocessing::loadInput(QString inputPath, const qintptr& requester)
 {
     if (this->preprocessingIsRunning) {
         this->preprocessingError(10);
@@ -272,6 +274,7 @@ int Preprocessing::loadInput(QString inputPath)
     }
 
     this->cleanInput();
+    this->requester = requester;
     this->inputParams.path = inputPath;
     this->inputParams.inputLoaded = true;
 
@@ -314,6 +317,7 @@ void Preprocessing::start()
 
             this->cleanResults();
             this->cleanDurations();
+            this->results.requester = this->requester;
 
             this->preprocessingIsRunning = true;
             if (this->inputParams.mode == image || this->inputParams.mode == imagePath) {
@@ -460,6 +464,7 @@ void Preprocessing::continueAfterGabor()
     this->binarization.binarizeAdaptive();
     this->durations.binarization += this->timer.elapsed();
     this->results.imgBinarized = this->binarization.getImgBinarized();
+    this->results.requester = this->requester;
 
     // HOLE REMOVER
     if (this->features.useHoleRemover) {
@@ -482,11 +487,12 @@ void Preprocessing::continueAfterGabor()
         this->preprocessingIsRunning = false;
 
         if (this->features.advancedMode) {
+            this->results.requester = this->requester;
             emit preprocessingDoneSignal(this->results);
         }
         else {
             PREPROCESSING_RESULTS basicResults = {this->inputParams.imgOriginal, this->results.imgSkeleton, this->results.imgSkeletonInverted,
-                                                  this->results.qualityMap, this->results.orientationMap};
+                                                  this->results.qualityMap, this->results.orientationMap, this->requester};
             emit preprocessingDoneSignal(basicResults);
         }
         emit preprocessingDurationSignal(this->durations);
@@ -500,7 +506,7 @@ void Preprocessing::continueAfterGabor()
         if (this->features.advancedMode) this->allResultsMap.insert(this->inputParams.imgNames[this->inputParams.cnt], this->results);
         else {
             PREPROCESSING_RESULTS basicResults = {this->inputParams.imgOriginals[this->inputParams.cnt], this->results.imgSkeleton, this->results.imgSkeletonInverted,
-                                                  this->results.qualityMap, this->results.orientationMap};
+                                                  this->results.qualityMap, this->results.orientationMap, this->requester};
             this->resultsMap.insert(this->inputParams.imgNames[this->inputParams.cnt], basicResults);
         }
 

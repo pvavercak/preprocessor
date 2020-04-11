@@ -29,6 +29,7 @@ typedef struct preprocessing_all_results {
     cv::Mat frequencyMap;
     cv::Mat orientationMap;
     cv::Mat qualityMap;
+    qintptr requester;
 } PREPROCESSING_ALL_RESULTS;
 
 #ifndef PREPROCESSING_RESULTS_DEFINED
@@ -38,6 +39,7 @@ typedef struct preprocessing_results {
     cv::Mat imgSkeletonInverted;
     cv::Mat qualityMap;
     cv::Mat orientationMap;
+    qintptr requester;
 } PREPROCESSING_RESULTS;
 #define PREPROCESSING_RESULTS_DEFINED
 #endif
@@ -63,9 +65,9 @@ public:
     Preprocessing();
     void start();
 
-    int loadInput(cv::Mat imgOriginal);
-    int loadInput(QVector<cv::Mat> imgOriginals);
-    int loadInput(QString inputPath);
+    int loadInput(cv::Mat imgOriginal, const qintptr& requester);
+    int loadInput(QVector<cv::Mat> imgOriginals, const qintptr& requester);
+    int loadInput(QString inputPath, const qintptr& requester);
 
     int setPreprocessingParams(int blockSize = 13, double gaborLambda = 9, double gaborSigma = 3, int gaussBlockBasic = 1, double gaussSigmaBasic = 1.0, int gaussBlockAdvanced = 121, double gaussSigmaAdvanced = 10.0, int holeSize = 20);
     int setFeatures(bool useAdvancedMode, bool useContrastEnhancement = true, bool useAdvancedOrientationMap = true, bool useHoleRemover = true, bool generateInvertedSkeleton = true, bool useQualityMap = true, bool useMask = false, bool useFrequencyMap = false);
@@ -83,6 +85,7 @@ private:
     Thinning thinning;
     Mask mask;
     FrequencyMap fMap;
+    qintptr requester;
 
     QTime timer;
 
