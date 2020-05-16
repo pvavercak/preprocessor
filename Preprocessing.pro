@@ -7,7 +7,6 @@ DEFINES += PREPROCESSING_LIBRARY CPU_ONLY
 DEFINES -= NO_CPU
 DEFINES += QT_DEPRECATED_WARNINGS
 DEFINES += PRO_PWD=\\\"$$_PRO_FILE_PWD_\\\"
-unix: PKGCONFIG += opencv
 CONFIG += afcpu link_pkgconfig
 QMAKE_CFLAGS_ISYSTEM=
 
@@ -52,7 +51,9 @@ unix:!macx: LIBS += -L/usr/local/lib -lafcpu \
 
 unix:!macx: LIBS += -L/usr/lib/ -lboost_system\
                     -L/usr/lib/ -lpthread
-INCLUDEPATH += /usr/include
+INCLUDEPATH += /usr/include \
+               /usr/include/opencv4
+
 DEPENDPATH += /usr/include
 
 INCLUDEPATH += /usr/local/include
